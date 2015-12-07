@@ -1,0 +1,15 @@
+---
+title: "DV_FinalProject"
+author: "Monica and Rachel"
+date: "December 6, 2015"
+output: html_document
+---
+```{r, include=FALSE}
+require(tidyr)
+require(dplyr)
+require(ggplot2)
+require (jsonlite)
+require (RCurl)
+require (scales)
+```  
+
