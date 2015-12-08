@@ -39,11 +39,28 @@ Lastly, our final dataset gives a clear depiction of the attendance and truancy 
 source("../01 Data/ETL_4.R")
 ```
 
-
 ##**Visualizations**
 To create our visualizations, we started out creating them in Tableau and playing around with different options to find a meaningful visualization. Then, we attempted to replicated them in R Studio, SQL, and Shiny. 
 
 ###**Tableau**
+####**Histogram:**
 ![](../03 Tableau Workbooks/Histogram.jpg)
+
+####**Scatter Plot:**
 ![](../03 Tableau Workbooks/ScatterPlot.jpg)
-![](../03 Tableau Workbooks/Crosstab2.jpg)
+
+####**Crosstab: The effects of attendance**
+![](../03 Tableau Workbooks/Crosstab2.jpg)  
+  
+This crosstab shows the attendance rates of elementary, middle, high schools in 10 districts. We looked at a select number of districts to narrow down the information, so we filtered out schools that weren't in districts 1-10. From the crosstab, we see that the majority of the schools in these 10 districts tend to have higher attendance rates, and none of these schools have bad attendance.  
+
+We then looked at the relationship between the average attendance rate and the reading and math growth rate in different types of educational plantypes.  
+  
+![](../03 Tableau Workbooks/Crosstab.jpg) 
+  
+From this crosstab, we can see that there tends to be a slight effect on both the math and reading growth rate when the attendance is higher (orange). However, there are still several outliers that don't fit in as well such as the turnaround plan in elementary schools and the performance plan in high schools. These differences would probably be due to outside factors such as faculty quality or socioeconomic status.  
+
+###**Shiny**
+
+##**Conclusion**
+
