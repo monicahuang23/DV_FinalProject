@@ -4,7 +4,7 @@ require(ggplot2)
 
 setwd("~/DataVisualization/DV_FinalProject/01 Data")
 
-file_path <- "2011_enrl_working.csv"
+file_path <- "2011_truancy.csv"
 
 df <- read.csv(file_path, stringsAsFactors = FALSE)
 
@@ -12,14 +12,15 @@ df <- read.csv(file_path, stringsAsFactors = FALSE)
 names(df) <- gsub("\\.+", "_", names(df))
 str(df) # Uncomment this and  run just the lines to here to get column types to use for getting the list of measures.
 
-measures <- c("Org_Code", "School_Code", "TOTAL", "PCT_AmInd", "PCT_Asian", "PCT_Black", "PCT_hisp", "PCT_White", "PCT_PI","PCT_2ormore")
+measures <- c("County_Code", "District_Code", "School_Code","Student_Fall_Enrollment", "Total_Days_Possible", "Total_Days_Attended","Total_Student_Days_Excused_Absence", "Total_Student_Days_Unexcused_Absent", "Attendance_Rate", "Truancy_Rate")
 #measures <- NA # Do this if there are no measures.
 
 # Get rid of special characters in each column.
 # Google ASCII Table to understand the following:
 for(n in names(df)) {
-  df[n] <- data.frame(lapply(df[n], gsub, pattern="[^ -~]",replacement= ""))
+  df[n] <- data.frame(lapply(df[n], gsub, pattern="[^ -~]",replacement= ""), stringsAsFactors = FALSE)
 }
+df[measures] <- lapply(df[measures], function(x) as.numeric((x)))
 
 dimensions <- setdiff(names(df), measures)
 if( length(measures) > 1 || ! is.na(dimensions)) {
