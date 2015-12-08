@@ -1,0 +1,17 @@
+{
+    "contents" : "# server.R\nrequire(\"jsonlite\")\nrequire(\"RCurl\")\nrequire(ggplot2)\nrequire(dplyr)\nrequire(shiny)\nrequire(shinydashboard)\nrequire(leaflet)\n\nshinyServer(function(input, output) {\n        \n      KPI_Low_Max_value <- reactive({input$KPI1})     \n      KPI_Medium_Max_value <- reactive({input$KPI2})\n      rv <- reactiveValues(alpha = 0.50)\n      observeEvent(input$light, { rv$alpha <- 0.50 })\n      observeEvent(input$dark, { rv$alpha <- 0.75 })\n    \n      df3 <- eventReactive(input$clicks3, {data.frame(fromJSON(getURL(URLencode(gsub(\"\\n\", \" \", 'skipper.cs.utexas.edu:5001/rest/native/?query=\n            \"\"\"select Average Reading Growth Grade || \\\\\\' \\\\\\' || \\\\\\'Average Math Growth Grade\\\\\\' as measure_names, avg(MATH_GROWTH_GRADE) || \\\\\\' \\\\\\' || \\\\\\'avg(READ_GROWTH_GRADE)\\\\\\' as measure_values, FINAL_PLANTYPE from FINAL_GRADES\n            where EMH is not \"A\"\n            group by FINAL_PLANTYPE\n            union all\n            select avg(ATTENDANCE_RATE) as AV_ATTENDANCE_RATE from TRUANCY\n            order by 1;\"\"\"\n            ')), httpheader=c(DB='jdbc:oracle:thin:@sayonara.microlab.cs.utexas.edu:1521:orcl', USER='C##cs329e_mh42375', PASS='orcl_mh42375', \n            MODE='native_mode', MODEL='model', returnDimensions = 'False', returnFor = 'JSON'), verbose = TRUE)))\n      })\n\n      output$distPlot3 <- renderPlot(height=1000, width=2000, {\n            plot3 <- ggplot() + \n              coord_cartesian() + \n              scale_x_discrete() +\n              scale_y_continuous() +\n              #facet_wrap(~CLARITY, ncol=1) +\n              labs(title='Blending 2 Data Sources') +\n              labs(x=paste(\"Region Sales\"), y=paste(\"Sum of Sales\")) +\n              layer(data=df3(), \n                    mapping=aes(x=EMH, y=FINAL_PLANTYPE), \n                    stat=\"identity\", \n                    stat_params=list(), \n                    geom=\"text\",\n                    geom_params=list(colour=KPI), \n                    position=position_identity()\n              #) + coord_flip() +\n              )+\n              layer(data=df3(), \n                    mapping=aes(x=EMH, y=MEASURE_NAMES, label=(MEASURE_VALUES)), \n                    stat=\"identity\", \n                    stat_params=list(), \n                    geom=\"text\",\n                    #geom_params=list(colour=\"\", hjust=-0.5), \n                    position=position_identity()\n              )\n              plot3\n      })\n})\n\n",
+    "created" : 1449568639750.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "467054740",
+    "id" : "492F11AE",
+    "lastKnownWriteTime" : 1449569710,
+    "path" : "~/DataVisualization/DV_FinalProject/04 Shiny/Crosstab.R",
+    "project_path" : "04 Shiny/Crosstab.R",
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "type" : "r_source"
+}

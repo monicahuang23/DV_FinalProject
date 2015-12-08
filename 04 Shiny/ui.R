@@ -15,8 +15,17 @@ navbarPage(
      mainPanel(plotOutput("distPlot1")
      )
   ),
-  tabPanel(title = "Aggregated Measure Analysis",
+  tabPanel(title = "Crosstab",
      sidebarPanel(
+       actionButton(inputId = "light", label = "Light"),
+       actionButton(inputId = "dark", label = "Dark"),
+       sliderInput("KPI1", "KPI_bad_attendance:", 
+                   min = 1, max = 20,  value = 20),
+       sliderInput("KPI2", "KPI_average_attendance:", 
+                   min = 10, max = 32,  value = 32),
+       textInput(inputId = "title", 
+                 label = "CrossTab Title",
+                 value = "CrossTab"),
        
        actionButton(inputId = "clicks2",  label = "Show the plot")
      ),

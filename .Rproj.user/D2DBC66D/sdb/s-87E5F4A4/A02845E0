@@ -1,0 +1,17 @@
+{
+    "contents" : "# server.R\nrequire(\"jsonlite\")\nrequire(\"RCurl\")\nrequire(ggplot2)\nrequire(dplyr)\nrequire(shiny)\nrequire(shinydashboard)\nrequire(leaflet)\n\nshinyServer(function(input, output) {\n\n# start of plot 2      \n      KPI_bad_attendance <- reactive({input$KPI1})     \n      KPI_average_attendance <- reactive({input$KPI2})\n      rv <- reactiveValues(alpha = 0.50)\n      observeEvent(input$light, { rv$alpha <- 0.50 })\n      observeEvent(input$dark, { rv$alpha <- 0.75 })\n      \n      df2 <- eventReactive(input$clicks2, {data.frame(fromJSON(getURL(URLencode(gsub(\"\\n\", \" \", 'skipper.cs.utexas.edu:5001/rest/native/?query=\n            \"select SCHOOL_LEVEL, district_name, kpi,\n            case                                                                                   when kpi < \"p1\" then \\\\\\'Bad Attendance\\\\\\'\n            when kpi < \"p2\" then \\\\\\'Average Attendance\\\\\\'\n            else \\\\\\'Great Attendance\\\\\\'\n            end kpi                                                                                from (select school_level, district_name, avg(attendance_rate) as kpi\n            from truancy \n            where DISTRICT_CODE <= 10\n            group by SCHOOL_LEVEL, DISTRICT_NAME);\"\n            ')), httpheader=c(DB='jdbc:oracle:thin:@sayonara.microlab.cs.utexas.edu:1521:orcl', USER='C##cs329e_mh42375', PASS='orcl_mh42375', \n                 MODE='native_mode', MODEL='model', returnDimensions = 'False', returnFor = 'JSON', p1=KPI_bad_attendance(), p2=KPI_average_attendance()), verbose = TRUE)))\n      })\n      \n      output$distPlot2 <- renderPlot({             \n            plot2 <- ggplot() + \n                  coord_cartesian() + \n                  scale_x_discrete() +\n                  scale_y_discrete() +\n                  labs(title=isolate(input$title)) +\n                  labs(x=paste(\"School Level\"), y=paste(\"District Name\")) +\n                  layer(data=df2(), \n                        mapping=aes(x=SCHOOL_LEVEL, y=DISTRICT_NAME, label=round(KPI)), \n                        stat=\"identity\", \n                        stat_params=list(), \n                        geom=\"text\",\n                        geom_params=list(colour=\"black\"), \n                        position=position_identity()\n                  ) +\n                  layer(data=df2(), \n                        mapping=aes(x=SCHOOL_LEVEL, y=DISTRICT_NAME, fill=KPI.1), \n                        stat=\"identity\", \n                        stat_params=list(), \n                        geom=\"tile\",\n                        geom_params=list(alpha=rv$alpha), \n                        position=position_identity()\n                  )\n           plot2\n      }) \n      \n      observeEvent(input$clicks, {\n        print(as.numeric(input$clicks))\n      })\n\n})",
+    "created" : 1449511411696.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "122752365",
+    "id" : "A02845E0",
+    "lastKnownWriteTime" : 1449571348,
+    "path" : "~/DataVisualization/DV_FinalProject/04 Shiny/server.R",
+    "project_path" : "04 Shiny/server.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "type" : "r_source"
+}
